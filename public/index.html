@@ -46,7 +46,7 @@
     }
 
     #result {
-      margin: 20px;
+      margin: 0 auto;
       font-size: 18px;
     }
 
@@ -55,12 +55,21 @@
     }
   </style>
   <body>
-    <h1>Change Notes Generator</h1>
+    <h1>Change Note Generator</h1>
+    <p>
+      Paste two version of your markdown content in the boxes below, and click
+      "Get Changenotes" to automatically generate changenotes based on the two
+      versions.
+    </p>
     <div id="parent">
       <textarea id="current-content" placeholder="Current content"></textarea>
       <textarea id="updated-content" placeholder="Updated content"></textarea>
     </div>
-    <button onclick="generateChangeNotes()">Write change notes</button>
+    <button onclick="generateChangeNotes()">
+      <div>
+        <span>Get changenotes</span>
+      </div>
+    </button>
     <p id="result"></p>
 
     <script>

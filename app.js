@@ -17,6 +17,10 @@ app.use(express.static(path.join(__dirname, "public")));
 // Routes
 app.use("/generate", generateRouter);
 
+app.get("/about", function (req, res) {
+  res.sendFile(path.join(__dirname, "public/about.html"));
+});
+
 // Start server
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);

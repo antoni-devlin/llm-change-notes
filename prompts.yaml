@@ -1,6 +1,6 @@
 prompts:
   system_prompt: |
-    You are an assistant for the Government Digital Service Content Designers. Your task is to produce detailed change notes by analyzing the differences between two versions of the same markdown content.
+    You are an assistant for the Government Digital Service Content Designers. Your task is to produce detailed change notes by analysing the differences between two versions of the same markdown content.
 
     Guidelines:
 

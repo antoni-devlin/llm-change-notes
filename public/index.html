@@ -74,19 +74,83 @@
 
     <script>
       async function generateChangeNotes() {
-        const currentContent = document.getElementById("current-content").value;
-        const updatedContent = document.getElementById("updated-content").value;
+        const currentMarkdown =
+          document.getElementById("current-content").value;
+        const newMarkdown = document.getElementById("updated-content").value;
 
-        const response = await fetch("/generate", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            currentContent,
-            updatedContent,
-          }),
+        let Diff = require("diff");
+
+        let diff = Diff.diffLines(currentMarkdown, newMarkdown);
+
+        let changeIndex = 1;
+        let currentContent = "";
+        let changedContent = "";
+        let added = false;
+        let removed = false;
+        let currentHeading = "";
+
+        const isHeading = (line) => /^##/.test(line);
+
+        diff.forEach((part) => {
+          if (isHeading(part.value)) {
+            currentHeading = part.value.trim();
+          }
+
+          if (part.added) {
+            changedContent += part.value;
+            added = true;
+          } else if (part.removed) {
+            currentContent += part.value;
+            removed = true;
+          } else {
+            if (currentContent || changedContent) {
+              console.log(`[${changeIndex}]`);
+              console.log(`LOCATION: ${currentHeading}`);
+              if (removed && added) {
+                console.log("CHANGE\n");
+                console.log(currentContent.trim());
+                console.log("\nTO\n");
+                console.log(changedContent.trim());
+                console.log("\n");
+              } else if (removed) {
+                console.log("REMOVED\n");
+                console.log(currentContent.trim());
+                console.log("\n");
+              } else if (added) {
+                console.log("ADDED\n");
+                console.log(changedContent.trim());
+                console.log("\n");
+              }
+
+              changeIndex++;
+              currentContent = "";
+              changedContent = "";
+              added = false;
+              removed = false;
+            }
+          }
         });
+
+        // Handle any remaining changes
+        if (currentContent || changedContent) {
+          console.log(`[${changeIndex}]`);
+          console.log(`LOCATION: ${currentHeading}`);
+          if (removed && added) {
+            console.log("CHANGE\n");
+            console.log(currentContent.trim());
+            console.log("\nTO\n");
+            console.log(changedContent.trim());
+            console.log("\n");
+          } else if (removed) {
+            console.log("REMOVED\n");
+            console.log(currentContent.trim());
+            console.log("\n");
+          } else if (added) {
+            console.log("ADDED\n");
+            console.log(changedContent.trim());
+            console.log("\n");
+          }
+        }
 
         const data = await response.json();
         document.getElementById("result").innerText = data.result;

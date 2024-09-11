@@ -78,7 +78,7 @@
           document.getElementById("current-content").value;
         const newMarkdown = document.getElementById("updated-content").value;
 
-        let Diff = require("diff");
+        let Diff = await import("/diff.js");
 
         let diff = Diff.diffLines(currentMarkdown, newMarkdown);
 

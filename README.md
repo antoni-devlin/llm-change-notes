@@ -8,6 +8,8 @@ This is a change note generator written in Node that uses the OpenAI API (curren
 
 You'll need node and npm installed to run this project. Confirmed working on node 9.5.1.
 
+Alternatively, open this repo in a Github Codespace and follow the steps below.
+
 ## Setup
 
 Clone this repo, and create a file called `.env` in the project root containing the following environment variables:

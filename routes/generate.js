@@ -34,8 +34,6 @@ const prompts = readYamlFile().prompts;
 const systemPrompt = prompts.system_prompt;
 const fewShots = prompts.few_shots;
 
-// console.log(fewShots);
-
 let messages = [];
 messages.unshift({ role: "system", content: `${systemPrompt}` });
 

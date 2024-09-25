@@ -2,6 +2,8 @@
 
 This is a change note generator written in Node that uses the OpenAI API (currently gpt 3.5-turbo).
 
+<img width="1515" alt="Screenshot 2024-09-25 at 13 35 11" src="https://github.com/user-attachments/assets/0658b121-2df7-44df-824b-178683cd8ef3">
+
 ## Before you start
 
 You'll need node and npm installed to run this project. Confirmed working on node 9.5.1.

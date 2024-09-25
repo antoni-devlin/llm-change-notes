@@ -11,8 +11,8 @@ const router = express.Router();
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
-  organization: "org-TBT0kyFALjpxp1vdY2sY9Xe2",
-  project: "proj_OL13brx9UFSCUdDKqopdVJj9",
+  organization: process.env.OPENAI_ORG,
+  project: process.env.OPENAI_PROJECT,
 });
 
 // Function to read and parse YAML file

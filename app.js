@@ -17,7 +17,12 @@ app.use(express.static(path.join(__dirname, "public")));
 // Routes
 app.use("/generate", generateRouter);
 
-app.get("/about", function (req, res) {
+app.get("/env", function (req, res) {
+  res.send({
+    key: process.env.OPENAI_API_KEY,
+    org: process.env.OPENAI_ORG,
+    proj: process.env.OPENAI_PROJECT,
+  });
   res.sendFile(path.join(__dirname, "public/about.html"));
 });
 

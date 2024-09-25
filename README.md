@@ -23,3 +23,5 @@ Then run `npm install` from the project root to install dependencies.
 Run `npm start` to start the express server at `localhost:3000`.
 
 The system prompts and few-shot examples are in `prompts.yaml`.
+
+OpenAI completions settings are in `app.js`.

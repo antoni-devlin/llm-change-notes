@@ -2,6 +2,10 @@
 
 This is a change note generator written in Node that uses the OpenAI API (currently gpt 3.5-turbo).
 
+## Before you start
+
+You'll need node and npm installed to run this project. Confirmed working on node 9.5.1.
+
 ## Setup
 
 Clone this repo, and create a file called `.env` in the project root containing the following environment variables:

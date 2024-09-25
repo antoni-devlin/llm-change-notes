@@ -20,7 +20,7 @@ Then run `npm install` from the project root to install dependencies.
 
 ## Usage
 
-Run `npm start` to start the express server at `localhost:3000`.
+Run `npm start` to start the express server at `localhost:3000`. Nodemon will automatically restart the server after any changes you make.
 
 The system prompts and few-shot examples are in `prompts.yaml`.
 

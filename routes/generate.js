@@ -37,8 +37,8 @@ const fewShots = prompts.few_shots;
 let messages = [];
 messages.unshift({ role: "system", content: `${systemPrompt}` });
 
-// Iterate over the few_shots array
-prompts.few_shots.forEach((fewShot, index) => {
+// Iterate over the few_shots array and add the system prompt and fewShots to messages object
+fewShots.forEach((fewShot, index) => {
   messages.push(
     { role: "user", content: fewShot.user },
     { role: "assistant", content: fewShot.assistant }

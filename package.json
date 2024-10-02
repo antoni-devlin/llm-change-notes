@@ -7,6 +7,9 @@
   "scripts": {
     "start": "nodemon app.js"
   },
+  "nodemonConfig": {
+    "ext": "js,html,json,css,yaml"
+  },
   "dependencies": {
     "body-parser": "^1.19.0",
     "dotenv": "^10.0.0",

@@ -15,9 +15,29 @@
       flex-direction: column;
     }
 
+    .spinner {
+      border: 4px solid rgba(0, 0, 0, 0.1); /* Light gray */
+      border-left-color: rgb(255, 255, 255); /* Black spinner */
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
     #parent {
       display: flex;
       gap: 10px;
+      max-width: 90vw;
     }
 
     textarea {
@@ -48,10 +68,24 @@
     #result {
       margin: 0 auto;
       font-size: 18px;
+      border: 1px solid black;
+    }
+
+    #accuracy {
+      border: 1px solid black;
+    }
+
+    #change-summary {
+      border: 1px solid black;
     }
 
     h1 {
       margin-bottom: 20px;
+    }
+
+    p {
+      max-width: 1000px;
+      padding: 0 15px 0 15px;
     }
   </style>
   <body>
@@ -65,15 +99,24 @@
       <textarea id="current-content" placeholder="Current content"></textarea>
       <textarea id="updated-content" placeholder="Updated content"></textarea>
     </div>
-    <button onclick="generateChangeNotes()">
-      <div>
-        <span>Get change notes</span>
-      </div>
+    <button type="button" id="generate-btn" onclick="generateChangeNotes()">
+      <span>Get change notes</span>
     </button>
-    <p id="result"></p>
+    <span id="spinner" class="spinner"></span>
+    <div id="result-wrapper">
+      <p id="accuracy"></p>
+      <p id="change-summary"></p>
+      <p id="result"></p>
+    </div>
 
     <script>
       async function generateChangeNotes() {
+        // Get references to spinner
+        const spinner = document.getElementById("spinner");
+
+        // Show the spinner
+        spinner.style.display = "inline-block";
+
         const currentContent = document.getElementById("current-content").value;
         const updatedContent = document.getElementById("updated-content").value;
 
@@ -89,8 +132,14 @@
         });
 
         const data = await response.json();
-        document.getElementById("result").innerText = data.result;
+        console.log(data);
+        document.getElementById("result").innerText = data.changeNotes;
+        document.getElementById("accuracy").innerText = data.accuracyCheck;
+        document.getElementById("change-summary").innerText =
+          data.descriptionOfChanges;
       }
+      // Hide the spinner and re-enable the button after the request is complete
+      spinner.style.display = "none";
     </script>
   </body>
 </html>

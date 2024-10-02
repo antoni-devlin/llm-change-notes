@@ -37,40 +37,78 @@ const fewShots = prompts.few_shots;
 let messages = [];
 messages.unshift({ role: "system", content: `${systemPrompt}` });
 
-// Iterate over the few_shots array
-prompts.few_shots.forEach((fewShot, index) => {
+// Iterate over the few_shots array and add the system prompt and fewShots to messages object
+fewShots.forEach((fewShot, index) => {
   messages.push(
     { role: "user", content: fewShot.user },
     { role: "assistant", content: fewShot.assistant }
   );
 });
 
-router.post("/", async (req, res) => {
-  const { currentContent, updatedContent } = req.body;
+async function runCompletion(currentContent, updatedContent) {
+  console.log("Call 1: Getting description of changes");
+  // Step 1 Get a description of the difference between the two pieces of content
+  let descriptionOfChanges = await openai.chat.completions.create({
+    messages: [
+      {
+        role: "user",
+        content: `Describe the difference between the following two pieces of markdown content. Make sure you flag whether each change is a CHANGE, REMOVAL or DIFFERENCE in a new bullet point:\n\n---CURRENT CONTENT---\n\n${currentContent}\n\n---NEW CONTENT---\n\n${updatedContent}`,
+      },
+    ],
+    temperature: 0.7,
+    model: "gpt-4o-mini",
+  });
+  // Add description prompt to the system prompt so LLM can use it as a guide when creating change notes
+  descriptionOfChanges = descriptionOfChanges.choices[0].message.content;
+  messages.splice(1, 0, {
+    role: "user",
+    content: `Use this text description of the changes between these two specific versions of the content to guide the change notes, and ensure they  are accurate and you haven't missed anything:\n${descriptionOfChanges}`,
+  });
 
+  // Step 2 Generate change notes for the two pieces of content
+  console.log("Call 2: Generating change notes");
   messages.push({
     role: "user",
     content: `---CURRENT CONTENT---\n\n${currentContent}\n\n---NEW CONTENT---\n\n${updatedContent}`,
   });
+  let changeNotes = await openai.chat.completions.create({
+    messages: messages,
+    temperature: 0.7,
+    model: "gpt-4o-mini",
+  });
+  changeNotes = changeNotes.choices[0].message.content;
+  // Step 3 Check the changes notes against the description of changes, and return an accuracy statement
+  console.log("Call 3: Checking accuracy");
+  let accuracyCheck = await openai.chat.completions.create({
+    messages: [
+      {
+        role: "user",
+        content: `Check that the following ==Change notes== accurately represent the changes made to the markdown content described in the ==Description of Changes== section. If they match, return only "Change notes look good". If they don't match, return only "Change notes are probably not accurate." Never say anything else. Here is the information for you to analyse.\n\n==Change notes==\n\n${changeNotes}\n\n==Description of changes==\n\n${descriptionOfChanges}`,
+      },
+    ],
+    temperature: 0.7,
+    model: "gpt-4o-mini",
+  });
 
+  accuracyCheck = accuracyCheck.choices[0].message.content;
+
+  return { descriptionOfChanges, changeNotes, accuracyCheck };
+}
+
+router.post("/", async (req, res) => {
+  const { currentContent, updatedContent } = req.body;
   try {
-    console.log(messages);
-    console.log("Starting completion");
-    const completion = await openai.chat.completions.create({
-      messages: messages,
-      temperature: 0.7,
-      model: "gpt-3.5-turbo",
+    const { descriptionOfChanges, changeNotes, accuracyCheck } =
+      await runCompletion(currentContent, updatedContent);
+    res.json({
+      descriptionOfChanges,
+      changeNotes,
+      accuracyCheck,
     });
-
-    const result = completion.choices[0].message.content;
-    res.json({ result });
-    console.log("Completion returned");
-    return completion.choices[0];
+    console.log("Result returned");
   } catch (error) {
-    console.error("Error generating change notes:", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while generating change notes." });
+    console.log("Something went wrong:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 

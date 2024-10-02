@@ -68,6 +68,15 @@
     #result {
       margin: 0 auto;
       font-size: 18px;
+      border: 1px solid black;
+    }
+
+    #accuracy {
+      border: 1px solid black;
+    }
+
+    #change-summary {
+      border: 1px solid black;
     }
 
     h1 {
@@ -90,80 +99,23 @@
       <textarea id="current-content" placeholder="Current content"></textarea>
       <textarea id="updated-content" placeholder="Updated content"></textarea>
     </div>
-    <button id="generate-btn"  onclick="generateChangeNotes()">
-      <span id="spinner" class="spinner" ></span>
+    <button type="button" id="generate-btn" onclick="generateChangeNotes()">
+      <span>Get change notes</span>
     </button>
-      <div>
-        <span>Get change notes</span>
-      </div>
-    </button>
+    <span id="spinner" class="spinner"></span>
     <div id="result-wrapper">
-      <p id="accuracy">Changes notes look good</p>
-      <p id="change-summary">
-        Here are the differences between the CURRENT CONTENT and the NEW
-        CONTENT, categorized as CHANGE, REMOVAL, or DIFFERENCE: - **CHANGE**:
-        The section title has changed from "How to work out what funding you'll
-        get" to "If you changed course, stopped your studies or are repeating a
-        year." - **CHANGE**: The text explaining the calculation of funding has
-        been revised to clarify what types of loans are applicable. In the NEW
-        CONTENT, it states, "If you're eligible for Maintenance Loans or Grants,
-        you should get them for every year of your new course," and "Any Tuition
-        Fee Loans you’re eligible for will be applied to the final years of your
-        new course." This adds specificity about the types of funding. -
-        **REMOVAL**: The specific calculation example for funding based on the
-        length of study has been modified. The example in the CURRENT CONTENT
-        states, “If you are applying for a 3 year course and have studied 5
-        months of a different course, you’ll get 3 years of funding," while in
-        the NEW CONTENT, it has been changed to "If you’re applying for a 3 year
-        course and have studied 2 years of a different course, you’ll get a
-        Maintenance Loan in year 1 and Tuition Fees and Maintenance Loans in
-        years 2 and 3."
-      </p>
-      <p id="result">
-        CHANGE NOTES [1] LOCATION: ###If you changed course, stopped your
-        studies or are repeating a year CHANGE You can calculate the amount you
-        will get by taking the total number of years of the course you are
-        applying for and adding one year. Then take away the number of years you
-        studied for. If you studied for part of a year you should count it as a
-        whole year. TO You can calculate how many years you’ll get them for by
-        taking the total number of years you’re applying for and adding one
-        year. Then, take away the number of years you studied for previously. If
-        you studied for part of a year, you should count it as a whole year.
-        SUMMARY Revised the wording for clarity and consistency regarding the
-        calculation of funding years. [2] LOCATION: ####How to work out what
-        funding you'll get CHANGE $E TO If you're eligible for Maintenance Loans
-        or Grants, you should get them for every year of your new course. Any
-        Tuition Fee Loans you’re eligible for will be applied to the final years
-        of your new course. SUMMARY This section is new in the NEW CONTENT,
-        providing clarity on Maintenance Loans and Tuition Fee Loans. [3]
-        LOCATION: ###Example CHANGE If you are applying for a 3 year course and
-        have studied 5 months of a different course, you’ll get 3 years of
-        funding. If you are applying for a 4 year course and have studied 2
-        years of a different course, you’ll get 3 years of funding. TO If you’re
-        applying for a 3 year course and have studied 2 years of a different
-        course, you’ll get a Maintenance Loan in year 1 and Tuition Fees and
-        Maintenance Loans in years 2 and 3. If you’ve already completed a 3 year
-        course but didn’t gain a qualification and want to apply for another 3
-        year course, you’ll get Maintenance Loans in years 1 and 2. You’ll get
-        Tuition Fees and Maintenance Loans in year 3. SUMMARY Revised examples
-        to provide specific details about the types of loans received and
-        altered the scenarios presented. Adjusted the numbers and descriptions
-        for clarity. [4] LOCATION: ###Example CHANGE $E TO $E SUMMARY The
-        placement of the dollar sign ($E) was retained but its surrounding
-        context has changed due to the revised content.
-      </p>
+      <p id="accuracy"></p>
+      <p id="change-summary"></p>
+      <p id="result"></p>
     </div>
 
     <script>
       async function generateChangeNotes() {
-
-        // Get references to the button and spinner
-        const button = document.getElementById("generate-btn");
+        // Get references to spinner
         const spinner = document.getElementById("spinner");
 
         // Show the spinner
         spinner.style.display = "inline-block";
-        button.disabled = true; // Disable the button while processing
 
         const currentContent = document.getElementById("current-content").value;
         const updatedContent = document.getElementById("updated-content").value;
@@ -188,7 +140,6 @@
       }
       // Hide the spinner and re-enable the button after the request is complete
       spinner.style.display = "none";
-      button.disabled = false;
     </script>
   </body>
 </html>

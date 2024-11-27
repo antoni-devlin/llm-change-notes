@@ -1,9 +1,12 @@
 import express from "express";
-import OpenAI from "openai";
+// import OpenAI from "openai";
+import OpenAI from "openpipe/openai";
 import dotenv from "dotenv";
 
 import fs from "fs";
 import yaml from "js-yaml";
+
+import { randomUUID } from "crypto";
 
 dotenv.config();
 
@@ -46,6 +49,8 @@ fewShots.forEach((fewShot, index) => {
 });
 
 async function runCompletion(currentContent, updatedContent) {
+  const runID = randomUUID();
+  console.log(`runID: ${runID}`);
   console.log("Call 1: Getting description of changes");
   // Step 1 Get a description of the difference between the two pieces of content
   let descriptionOfChanges = await openai.chat.completions.create({
@@ -57,6 +62,7 @@ async function runCompletion(currentContent, updatedContent) {
     ],
     temperature: 0.7,
     model: "gpt-4o-mini",
+    metadata: { run_id: runID, prompt_name: "generate description" },
   });
   // Add description prompt to the system prompt so LLM can use it as a guide when creating change notes
   descriptionOfChanges = descriptionOfChanges.choices[0].message.content;
@@ -75,6 +81,7 @@ async function runCompletion(currentContent, updatedContent) {
     messages: messages,
     temperature: 0.7,
     model: "gpt-4o-mini",
+    metadata: { run_id: runID, prompt_name: "generate change notes" },
   });
   changeNotes = changeNotes.choices[0].message.content;
   // Step 3 Check the changes notes against the description of changes, and return an accuracy statement
@@ -88,6 +95,7 @@ async function runCompletion(currentContent, updatedContent) {
     ],
     temperature: 0.7,
     model: "gpt-4o-mini",
+    metadata: { run_id: runID, prompt_name: "check change notes" },
   });
 
   accuracyCheck = accuracyCheck.choices[0].message.content;
